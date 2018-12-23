@@ -7,12 +7,6 @@ public class WorldController : MonoBehaviour
     public static WorldController Instance { get; protected set; }
     public World world { get; protected set; }
 
-    public Sprite ThingSpriteCache;
-    public Sprite EmptySpriteCache;
-    public Sprite ObsidianSpriteCache;
-    public Sprite DoorRSpriteCache;
-    public Sprite DoorLSpriteCache;
-
     public void OnEnable()
     {
         Instance = this;
@@ -22,62 +16,35 @@ public class WorldController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Dictionary<Tile.Type, Sprite> SpritesMap = new Dictionary<Tile.Type, Sprite> {
-            { Tile.Type.Empty, EmptySpriteCache },
-            { Tile.Type.Thing, ThingSpriteCache },
-            { Tile.Type.Obsidian, ObsidianSpriteCache },
-            { Tile.Type.DoorL, DoorLSpriteCache },
-            { Tile.Type.DoorR, DoorRSpriteCache },
-        };
+        Debug.Log("Creating Player 1");
+        world.CreateChar("player.1", new Vector2(5.5f, 18.9f));
 
-        int doorHeight = world.height - 5;
+        Debug.Log("Creating Tiles");
+        drawFloor();
+        drawWalls();
 
-        world.GetTileAt(5, doorHeight).type = Tile.Type.DoorL;
-        world.GetTileAt(6, doorHeight).type = Tile.Type.DoorR;
-
-        makeBorderTileType(Tile.Type.Obsidian);
-
-        // Create GameObjet for each tile
-        for (int x = 0; x < world.width; x++)
-        {
-            for (int y = 0; y < world.height; y++)
-            {
-                Tile tile_data = world.GetTileAt(x, y);
-
-                if (tile_data.type == Tile.Type.Empty)
-                    continue;
-                GameObject tile_go = new GameObject();
-                tile_go.name = "Tile_" + x + "_" + y;
-                tile_go.transform.position = new Vector3(x, y, 0);
-                tile_go.transform.SetParent(this.transform, true);
-
-                // Don't set the actual sprite yet
-                tile_go.AddComponent<SpriteRenderer>();
-
-                SpriteRenderer sr = tile_go.GetComponent<SpriteRenderer>();
-                sr.sprite = SpritesMap[tile_data.type];
-                sr.sortingLayerName = "Tiles";
-            }
-        }
+        Debug.Log("Creating Chute");
+        int doorHeight = world.Height - 5;
+        world.CreateTile(5, doorHeight, Tile.Type.DoorL);
+        world.CreateTile(6, doorHeight, Tile.Type.DoorR);
     }
 
-    void makeBorderTileType(Tile.Type type)
+    void drawFloor()
     {
-        for (int i = 0; i < world.width; i++)
-        {
-            world.GetTileAt(i, 0).type = type;
-            world.GetTileAt(i, world.height - 1).type = type;
-        }
-        for (int i = 0; i < world.height; i++)
-        {
-            world.GetTileAt(0, i).type = type;
-            world.GetTileAt(world.width - 1, i).type = type;
+        for (int x = 0; x < world.Width; x++)
+            world.CreateTile(x, 0, Tile.Type.Obsidian);
+    }
+
+    void drawWalls()
+    {
+        int leftWall = 0;
+        int rightWall = world.Width - 1;
+        for (int y = 0; y < world.Height; y++) {
+            world.CreateTile(leftWall, y, Tile.Type.Obsidian);
+            world.CreateTile(rightWall, y, Tile.Type.Obsidian);
         }
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update() { }
 }

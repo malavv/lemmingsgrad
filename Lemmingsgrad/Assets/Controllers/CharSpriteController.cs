@@ -9,45 +9,33 @@ public class CharSpriteController : MonoBehaviour
     Dictionary<Character, GameObject> GOMap;
     Dictionary<string, Sprite> charSprites;
 
-    World world
-    {
-        get { return WorldController.Instance.world; }
-    }
+    World world { get { return WorldController.Instance.world; } }
 
     // Start is called before the first frame update
     void Start()
     {
+        GOMap = new Dictionary<Character, GameObject>();
+        charSprites = new Dictionary<string, Sprite>();
+
         LoadSprites();
 
-        GOMap = new Dictionary<Character, GameObject>();
-
-        Debug.Log(world);
-
         world.RegisterCharCreated(OnCharCreated);
-
-        world.CreateChar(world.GetTileAt(5, 5));
     }
 
     private void LoadSprites()
     {
-        charSprites = new Dictionary<string, Sprite>();
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Images/Char/");
-
-        Debug.Log("Loaded Char Sprites");
-        foreach (Sprite s in sprites)
-        {
+        foreach (Sprite s in Resources.LoadAll<Sprite>("Images/Char/"))
             charSprites[s.name] = s;
-        }
+        Debug.Log("Loaded Char Sprites");
     }
 
     private void OnCharCreated(Character c)
     {
         GameObject go = new GameObject();
-
         GOMap.Add(c, go);
 
-        go.name = "Char_" + c.X + "_" + c.Y;
-        go.transform.position = new Vector3(c.X, c.Y, 0);
+        go.name = "Char_" + c.Name;
+        go.transform.position = new Vector3(c.Origin.x, c.Origin.y, 0);
         go.transform.SetParent(this.transform, true);
 
         go.AddComponent<SpriteRenderer>();
@@ -55,7 +43,16 @@ public class CharSpriteController : MonoBehaviour
         sr.sprite = getSpriteForChar(c);
         sr.sortingLayerName = "Characters";
 
+        go.AddComponent<Rigidbody2D>();
+        go.AddComponent<BoxCollider2D>();
+
+        BoxCollider2D bc = go.GetComponent<BoxCollider2D>();
+        bc.offset = new Vector2(0, 0);
+        bc.size = new Vector2(1, 1);
+
         c.RegisterOnChangedCallback(OnCharChanged);
+
+        OnCharChanged(c);
     }
 
     private void OnCharChanged(Character c)
@@ -75,5 +72,4 @@ public class CharSpriteController : MonoBehaviour
     {
         return charSprites["front_hold"];
     }
-
 }

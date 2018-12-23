@@ -3,59 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Direction { Left, Right, Unknown };
+
 public class Character
 {
-    public float X {
-        get { return (destTile.x - currTile.x) * movementPercentage + currTile.x; }
-    }
-    public float Y
-    {
-        get { return (destTile.y - currTile.y) * movementPercentage + currTile.y; }
-    }
-
-    Tile currTile;
-    Tile destTile;
-    float movementPercentage;
-
-    float speed = 2f; /* Tiles per seconds */
     private Action<Character> cbCharChanged;
+    public readonly String Name;
+    public readonly Vector2 Origin;
 
-    public void Update(float deltaTime)
-    {
-        if (currTile == destTile)
-            return;
+    //World world;
 
-        float distX = (destTile.x - currTile.x);
-        float distY = (destTile.x - currTile.x);
-        float dist = Mathf.Sqrt(Mathf.Pow(distX, 2) + Mathf.Pow(distY, 2));
+    public Direction Direction { get; protected set; }
 
-        float distThisFrame = speed * deltaTime;
-
-        float percThisFrame = distThisFrame / dist;
-
-        movementPercentage += percThisFrame;
-
-        if (movementPercentage >= 1)
-        {
-            // Reached destination
-            currTile = destTile;
-            movementPercentage = 0;
-        }
+    public Character(World world, String name, Vector2 origin, Direction direction = Direction.Unknown) {
+        //this.world = world;
+        Name = name;
+        Direction = direction;
+        Origin = origin;
     }
 
-    public Character(Tile tile)
-    {
-        currTile = tile;
-        destTile = tile;
-    }
-
-    public void SetDestination(Tile tile)
-    {
-        destTile = tile;
-    }
-
-    public void RegisterOnChangedCallback(Action<Character> callback)
-    {
-        cbCharChanged += callback;
-    }
+    public void RegisterOnChangedCallback(Action<Character> callback) { cbCharChanged += callback; }
+    public void UnRegisterOnChangedCallback(Action<Character> callback) { cbCharChanged -= callback; }
 }

@@ -6,41 +6,41 @@ using UnityEngine;
 public class World {
 
     public Tile[,] tiles;
-    public int width, height;
+    public int Width { get; protected set; }
+    public int Height { get; protected set; }
 
     List<Character> characters = new List<Character>();
-    private Action<Character> cbCharChanged;
+    private Action<Character> cbCharCreated;
+    private Action<Tile> cbTileCreated;
 
     public World(int width = 50, int height = 25)
     {
-        this.width = width;
-        this.height = height;
+        Width = width;
+        Height = height;
         tiles = new Tile[width, height];
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                tiles[x, y] = new Tile(Tile.Type.Empty, this, x, y);
-            }
-        }
-        // tiles[width / 4, height / 4]
     }
 
-    public void CreateChar(Tile tile)
+    public Tile CreateTile(int x, int y, Tile.Type type = Tile.Type.Empty)
     {
-        Character c = new Character(tile);
-        if (cbCharChanged != null)
-            cbCharChanged(c);
+        if (x < 0 || x >= Width) Debug.Log("Invalid X for tiles " + x);
+        if (y < 0 || y >= Height) Debug.Log("Invalid X for tiles " + y);
+        Tile t = new Tile(type, this, x, y);
+        tiles[x, y] = t;
+        if (cbTileCreated != null)
+            cbTileCreated(t);
+        return t;
     }
 
-    public Tile GetTileAt(int x, int y)
-    {
-        return tiles[x, y];
+    public Character CreateChar(String name, Vector2 position) {
+        Character c = new Character(this, name, position);
+        characters.Add(c);
+        if (cbCharCreated != null)
+            cbCharCreated(c);
+        return c;
     }
 
-    public void RegisterCharCreated(Action<Character> callback)
-    {
-        cbCharChanged += callback;
-    }
+    public Tile GetTileAt(int x, int y) { return tiles[x, y]; }
+
+    public void RegisterCharCreated(Action<Character> callback) { cbCharCreated += callback; }
+    public void RegisterTileCreated(Action<Tile> callback) { cbTileCreated += callback; }
 }
