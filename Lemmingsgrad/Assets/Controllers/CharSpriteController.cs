@@ -36,7 +36,6 @@ public class CharSpriteController : MonoBehaviour
 
     private void OnCharCreated(Character c)
     {
-        Debug.Log("On char created called");
         GameObject go = new GameObject();
         GOMap.Add(c, go);
 
@@ -50,11 +49,15 @@ public class CharSpriteController : MonoBehaviour
         sr.sortingLayerName = "Characters";
 
         go.AddComponent<Rigidbody2D>();
-        go.AddComponent<BoxCollider2D>();
+        go.AddComponent<CircleCollider2D>();
 
-        BoxCollider2D bc = go.GetComponent<BoxCollider2D>();
-        bc.offset = new Vector2(0, 0);
-        bc.size = new Vector2(1, 1);
+        Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true;
+        //rb.drag = 0.5f;
+
+        CircleCollider2D bc = go.GetComponent<CircleCollider2D>();
+        bc.offset = new Vector2(0.5f, 0.5f);
+        bc.radius = 0.5f;
 
         c.RegisterOnChangedCallback(OnCharChanged);
 
@@ -77,5 +80,25 @@ public class CharSpriteController : MonoBehaviour
     private Sprite getSpriteForChar(Character c)
     {
         return charSprites["front_hold"];
+    }
+
+    void FixedUpdate()
+    {
+        Character char0 = world.characters[0];
+        GameObject go = GOMap[char0];
+
+        Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
+
+        if (char0.isGrounded)
+        {
+            if (char0.Direction == Direction.Unknown)
+                char0.Direction = Direction.Right;
+
+            Vector3 directionVector = char0.Direction == Direction.Right ? transform.right : -transform.right;
+            rb.AddForce(directionVector * char0.Speed);
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(go.transform.position, -Vector2.up, 1f);
+        char0.isGrounded = hit.collider != null;
     }
 }

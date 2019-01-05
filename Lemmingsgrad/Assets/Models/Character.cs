@@ -9,17 +9,18 @@ public class Character
 {
     private Action<Character> cbCharChanged;
     public readonly String Name;
+    public float Speed;
     public readonly Vector2 Origin;
+    public bool isGrounded;
 
-    //World world;
-
-    public Direction Direction { get; protected set; }
+    public Direction Direction { get; set; }
 
     public Character(World world, String name, Vector2 origin, Direction direction = Direction.Unknown) {
-        //this.world = world;
         Name = name;
         Direction = direction;
         Origin = origin;
+        Speed = 15f;
+        isGrounded = false;
     }
 
     public void RegisterOnChangedCallback(Action<Character> callback) { cbCharChanged += callback; }

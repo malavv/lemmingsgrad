@@ -43,6 +43,7 @@ public class TileController : MonoBehaviour {
         sr.sortingLayerName = "Tiles";
 
         BoxCollider2D bc = go.GetComponent<BoxCollider2D>();
+        bc.offset = new Vector2(0.5f, 0.5f);
         bc.size = new Vector2(1.0f, 1.0f);
         //bc.offset = new Vector2();
 
