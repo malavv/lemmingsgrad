@@ -19,7 +19,12 @@ public class CharSpriteController : MonoBehaviour
 
         LoadSprites();
 
+        Debug.Log("On world registering");
+        Debug.Log(world);
         world.RegisterCharCreated(OnCharCreated);
+
+        foreach (Character character in world.characters)
+            OnCharCreated(character);
     }
 
     private void LoadSprites()
@@ -31,6 +36,7 @@ public class CharSpriteController : MonoBehaviour
 
     private void OnCharCreated(Character c)
     {
+        Debug.Log("On char created called");
         GameObject go = new GameObject();
         GOMap.Add(c, go);
 

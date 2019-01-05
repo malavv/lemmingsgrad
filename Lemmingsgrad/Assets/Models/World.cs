@@ -9,7 +9,7 @@ public class World {
     public int Width { get; protected set; }
     public int Height { get; protected set; }
 
-    List<Character> characters = new List<Character>();
+    public List<Character> characters = new List<Character>();
     private Action<Character> cbCharCreated;
     private Action<Tile> cbTileCreated;
 
@@ -34,6 +34,7 @@ public class World {
     public Character CreateChar(String name, Vector2 position) {
         Character c = new Character(this, name, position);
         characters.Add(c);
+        Debug.Log("CreateChar");
         if (cbCharCreated != null)
             cbCharCreated(c);
         return c;

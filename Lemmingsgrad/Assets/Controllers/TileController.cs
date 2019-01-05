@@ -18,6 +18,14 @@ public class TileController : MonoBehaviour {
         LoadSprites();
 
         world.RegisterTileCreated(OnTileCreated);
+
+        for (int x = 0; x < world.Width; x++) {
+            for (int y = 0; y < world.Height; y++) {
+                Tile t = world.tiles[x, y];
+                if (t != null)
+                    OnTileCreated(t);
+            }
+        }
     }
 
     private void OnTileCreated(Tile t)
