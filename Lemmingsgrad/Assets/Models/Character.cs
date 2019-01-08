@@ -12,15 +12,17 @@ public class Character
     public float Speed;
     public readonly Vector2 Origin;
     public bool isGrounded;
+    public Player owner;
 
     public Direction Direction { get; set; }
 
-    public Character(World world, String name, Vector2 origin, Direction direction = Direction.Unknown) {
+    public Character(World world, String name, Vector2 origin, Player owner, Direction direction = Direction.Unknown) {
         Name = name;
         Direction = direction;
         Origin = origin;
         Speed = 15f;
         isGrounded = false;
+        this.owner = owner;
     }
 
     public void RegisterOnChangedCallback(Action<Character> callback) { cbCharChanged += callback; }

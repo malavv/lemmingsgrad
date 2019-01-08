@@ -6,11 +6,13 @@ public class WorldController : MonoBehaviour
 {
     public static WorldController Instance { get; protected set; }
     public World world { get; protected set; }
+    public Player player1;
 
     public void OnEnable()
     {
         Instance = this;
         world = new World(50, 25);
+        player1 = new Player(1, "Player 1");
     }
 
     // Start is called before the first frame update
@@ -20,10 +22,9 @@ public class WorldController : MonoBehaviour
         drawFloor();
         drawWalls();
         
-
         Debug.Log("Creating Chute");
         Interactable door = world.CreateInteractable(5, 20, Interactable.Type.Door);
-        world.CreateChute(door.X, door.Y, Chute.Level1);
+        world.CreateChute(door.X, door.Y, Chute.Level.lvl1, player1);
     }
 
     void drawFloor()

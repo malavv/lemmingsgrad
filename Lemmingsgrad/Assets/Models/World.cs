@@ -24,9 +24,9 @@ public class World {
         tiles = new Tile[width, height];
     }
 
-    internal Chute CreateChute(int x, int y, Chute level1)
+    internal Chute CreateChute(int x, int y, Chute.Level level1, Player player)
     {
-        Chute chute = new Chute(x, y, level1, this);
+        Chute chute = new Chute(x, y, level1, this, player);
         chutes.Add(chute);
         Debug.Log("Chute Created");
         if (cbChuteCreated != null)
@@ -55,8 +55,8 @@ public class World {
         return obj;
     }
 
-    public Character CreateChar(String name, Vector2 position) {
-        Character c = new Character(this, name, position);
+    public Character CreateChar(String name, Vector2 position, Player owner) {
+        Character c = new Character(this, name, position, owner);
         characters.Add(c);
         Debug.Log("CreateChar");
         if (cbCharCreated != null)
