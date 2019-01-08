@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Tile
 {
-    public enum Type { Empty, Thing, Obsidian, DoorL, DoorR };
+    public enum Type { Empty, Thing, Obsidian, Ground };
 
     public Type type { get; protected set; }
 

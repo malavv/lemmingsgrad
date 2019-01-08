@@ -43,7 +43,7 @@ public class Chute
         if (timeSinceLastSpawnInSec > config.TimeBetweenSpawnInSec)
         {
             timeSinceLastSpawnInSec = 0;
-            World.CreateChar("player." + nSpawned, new Vector2(X, Y), owner);
+            World.CreateChar("player." + nSpawned, new Vector2(X + 0.5f, Y + 0.5f), owner);
             config.NumToSpawn--;
             nSpawned++;
         }

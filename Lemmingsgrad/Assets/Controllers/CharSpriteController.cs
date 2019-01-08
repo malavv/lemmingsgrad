@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class CharSpriteController : MonoBehaviour
 {
+    World world { get { return WorldController.Instance.world; } }
+
     Dictionary<Character, GameObject> GOMap;
     Dictionary<string, Sprite> charSprites;
-
-    World world { get { return WorldController.Instance.world; } }
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +40,8 @@ public class CharSpriteController : MonoBehaviour
         GOMap.Add(c, go);
 
         go.name = "Char_" + c.Name;
+        go.layer = 8;
+
         go.transform.position = new Vector3(c.Origin.x, c.Origin.y, 0);
         go.transform.SetParent(this.transform, true);
 
@@ -50,13 +52,13 @@ public class CharSpriteController : MonoBehaviour
 
         go.AddComponent<Rigidbody2D>();
         go.AddComponent<CircleCollider2D>();
+        go.AddComponent<CharController>();
 
         Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
-        //rb.drag = 0.5f;
 
         CircleCollider2D bc = go.GetComponent<CircleCollider2D>();
-        bc.offset = new Vector2(0.5f, 0.5f);
+        bc.offset = new Vector2(0f, 0f);
         bc.radius = 0.5f;
 
         c.RegisterOnChangedCallback(OnCharChanged);
@@ -82,23 +84,5 @@ public class CharSpriteController : MonoBehaviour
         return charSprites["front_hold"];
     }
 
-    void FixedUpdate()
-    {
-        Character char0 = world.characters[0];
-        GameObject go = GOMap[char0];
-
-        Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
-
-        if (char0.isGrounded)
-        {
-            if (char0.Direction == Direction.Unknown)
-                char0.Direction = Direction.Right;
-
-            Vector3 directionVector = char0.Direction == Direction.Right ? transform.right : -transform.right;
-            rb.AddForce(directionVector * char0.Speed);
-        }
-
-        RaycastHit2D hit = Physics2D.Raycast(go.transform.position, -Vector2.up, 1f);
-        char0.isGrounded = hit.collider != null;
-    }
+    void FixedUpdate() { }
 }

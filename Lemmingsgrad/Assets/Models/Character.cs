@@ -11,7 +11,8 @@ public class Character
     public readonly String Name;
     public float Speed;
     public readonly Vector2 Origin;
-    public bool isGrounded;
+
+    public bool IsGrounded;
     public Player owner;
 
     public Direction Direction { get; set; }
@@ -20,9 +21,14 @@ public class Character
         Name = name;
         Direction = direction;
         Origin = origin;
-        Speed = 15f;
-        isGrounded = false;
+        Speed = 5f;
+        IsGrounded = false;
         this.owner = owner;
+    }
+
+    public void FixedUpdate()
+    {
+
     }
 
     public void RegisterOnChangedCallback(Action<Character> callback) { cbCharChanged += callback; }

@@ -45,7 +45,7 @@ public class TileController : MonoBehaviour {
         BoxCollider2D bc = go.GetComponent<BoxCollider2D>();
         bc.offset = new Vector2(0.5f, 0.5f);
         bc.size = new Vector2(1.0f, 1.0f);
-        //bc.offset = new Vector2();
+        bc.edgeRadius = 0.01f;
 
         t.RegisterOnChangedCallback(OnTileChanged);
 
@@ -69,9 +69,8 @@ public class TileController : MonoBehaviour {
         {
             case Tile.Type.Empty: return tileSprites["Empty"];
             case Tile.Type.Obsidian: return tileSprites["Obsidian"];
-            case Tile.Type.DoorL: return tileSprites["door_left"];
-            case Tile.Type.DoorR: return tileSprites["door_right"];
             case Tile.Type.Thing: return tileSprites["Floor"];
+            case Tile.Type.Ground: return tileSprites["ground"];
             default: return tileSprites["Floor"];
         }
     }
