@@ -10,23 +10,20 @@ public class WorldController : MonoBehaviour
     public void OnEnable()
     {
         Instance = this;
-        world = new World();
+        world = new World(50, 25);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Creating Player 1");
-        world.CreateChar("player.1", new Vector2(5.5f, 18.9f));
-
         Debug.Log("Creating Tiles");
         drawFloor();
         drawWalls();
+        
 
         Debug.Log("Creating Chute");
-        int doorHeight = world.Height - 5;
-        world.CreateTile(5, doorHeight, Tile.Type.DoorL);
-        world.CreateTile(6, doorHeight, Tile.Type.DoorR);
+        Interactable door = world.CreateInteractable(5, 20, Interactable.Type.Door);
+        world.CreateChute(door.X, door.Y, Chute.Level1);
     }
 
     void drawFloor()
@@ -47,5 +44,7 @@ public class WorldController : MonoBehaviour
 
     // Update is called once per frame
     void FixedUpdate() {
+        foreach (Chute chute in world.chutes)
+            chute.FixedUpdate();
     }
 }
