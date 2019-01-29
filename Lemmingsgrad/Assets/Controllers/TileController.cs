@@ -7,7 +7,7 @@ using UnityEngine;
 public class TileController : MonoBehaviour {
     World world { get { return WorldController.Instance.world; } }
 
-    Dictionary<Tile, GameObject> TileMap;
+    public Dictionary<Tile, GameObject> TileMap;
     Dictionary<string, Sprite> tileSprites;
 
     void Start()
@@ -27,7 +27,7 @@ public class TileController : MonoBehaviour {
             }
         }
     }
-
+    
     private void OnTileCreated(Tile t)
     {
         GameObject go = new GameObject();

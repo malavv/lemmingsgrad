@@ -37,7 +37,7 @@ public class Chute
 
     public void FixedUpdate()
     {
-        if (config.NumToSpawn == 0)
+        if (config == null || config.NumToSpawn == 0)
             return;
 
         if (timeSinceLastSpawnInSec > config.TimeBetweenSpawnInSec)
